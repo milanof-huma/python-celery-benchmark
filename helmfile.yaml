@@ -1,0 +1,23 @@
+repositories:
+  - name: stable
+    url: https://kubernetes-charts.storage.googleapis.com
+
+releases:
+  - name: ingress-controller
+    namespace: kube-system
+    chart: stable/nginx-ingress
+    version: "1.40.3"
+
+  - name: simpleapp
+    namespace: default
+    chart: ./charts/simpleapp
+    values:
+      - image:
+          tag: v0.0.1
+        ingress:
+          enabled: true
+          hosts:
+            - host: mflogger.139.59.201.169.xip.io
+              paths:
+                - /
+                - /*

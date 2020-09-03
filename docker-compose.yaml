@@ -1,0 +1,23 @@
+version: "3.4"
+
+services:
+
+  py-redis:
+    image: sameersbn/redis:4.0.9-3
+    ports:
+      - "6333:6379"
+    environment:
+      REDIS_PASSWORD: redispassword
+    volumes:
+      - py_redisdata:/var/lib/redis
+    restart: always
+
+  start_dependencies:
+    image: dadarek/wait-for-dependencies
+    depends_on:
+      - py-redis
+    command: py-redis:6379
+
+volumes:
+  py_redisdata:
+
