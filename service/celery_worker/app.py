@@ -14,10 +14,11 @@ def register_tasks():
 
 
 @click.command()
-@click.option('--debug', default=True, help='Run in debug mode.')
+@click.option('--debug/--no-debug', default=True, help='Run in debug mode.')
+@click.option('--json-log/--normal-log', default=False, help='Generate JSON log.')
 @click.option('--redis-uri', default='redis://:redispassword@localhost:6333/0', help='Redis broker URI.')
-def run_app(debug: bool, redis_uri: str):
-    setup_log(enable_json_logging=False)
+def run_app(debug: bool, redis_uri: str, json_log: bool = True):
+    setup_log(debug=debug, enable_json_logging=json_log)
 
     setup_celery_app(redis_uri)
     register_tasks()
@@ -25,9 +26,12 @@ def run_app(debug: bool, redis_uri: str):
     args = []
     if debug:
         args.append("--loglevel=DEBUG")
-        args.append("-E")
+    else:
+        args.append("--loglevel=INFO")
+    args.append("-c")
+    args.append("24")
     args.append("-P")
-    args.append("solo")
+    args.append("threads")
     from service.common.celery_setup import celery_app
     celery_app.worker_main(args)
 

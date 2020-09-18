@@ -1,6 +1,6 @@
 import logging
 
-from flask import Blueprint, current_app, request
+from flask import Blueprint, request
 
 stats_routes = Blueprint('stats_blueprint', __name__)
 
